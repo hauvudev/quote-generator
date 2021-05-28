@@ -7,21 +7,19 @@ const loader = document.getElementById("loader");
 
 let apiQoutes = [];
 
-//Show Loading
-function loading() {
+function showLoadingSpinner() {
   loader.hidden = false;
   qouteContainer.hidden = true;
 }
 
-// Hide Loading
-function complete() {
+function removeLoadingSpinner() {
   qouteContainer.hidden = false;
   loader.hidden = true;
 }
 
 //Show newQoute
 function newQoutes() {
-  loading();
+  showLoadingSpinner();
   // Pick a random qoutes from Api
   const qoute = apiQoutes[Math.floor(Math.random() * apiQoutes.length)];
 
@@ -39,21 +37,19 @@ function newQoutes() {
     quoteText.classList.remove("long-quote");
   }
   quoteText.textContent = qoute.text;
-
-  // Set Qoute, Hide Loader
-  complete();
+  removeLoadingSpinner();
 }
 
 // Get Quotes From API
-async function getQoutes() {
-  loading();
+async function getQoutesFromAPI() {
+  showLoadingSpinner();
   const apiUrl = "https://type.fit/api/quotes";
   try {
     const response = await fetch(apiUrl);
     apiQoutes = await response.json();
     newQoutes();
   } catch (error) {
-    //Catch Error Here
+    getQoutesFromAPI();
   }
 }
 
@@ -68,4 +64,4 @@ newQouteBtn.addEventListener("click", newQoutes);
 twitterBtn.addEventListener("click", tweetQoute);
 
 //On load
-getQoutes();
+getQoutesFromAPI();
